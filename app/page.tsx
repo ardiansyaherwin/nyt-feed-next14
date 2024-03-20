@@ -1,27 +1,27 @@
-"use client";
-import { fetchNews } from "@/actions/news";
-import { NewsList } from "@/components/news-list";
-import SearchBar from "@/components/search-bar";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { ToastAction } from "@/components/ui/toast";
-import { useToast } from "@/components/ui/use-toast";
-import { generateQueryParam } from "@/lib/generate-query-param";
-import { Article } from "@/types";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState, useTransition } from "react";
+'use client';
+import { fetchNews } from '@/actions/news';
+import { NewsList } from '@/components/news-list';
+import SearchBar from '@/components/search-bar';
+import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
+import { ToastAction } from '@/components/ui/toast';
+import { useToast } from '@/components/ui/use-toast';
+import { generateQueryParam } from '@/lib/generate-query-param';
+import { Article } from '@/types';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useState, useTransition } from 'react';
 
 export default function Home() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const search = searchParams.get("search");
+  const search = searchParams.get('search');
   const { toast } = useToast();
   const [news, setNews] = useState<Article[]>([]);
   const [currentPage, setCurrentPage] = useState(-1);
   const [isFetching, startFetchTransition] = useTransition();
 
-  const fetchData = async (keyword: string = "") => {
+  const fetchData = async (keyword: string = '') => {
     if (isFetching) return;
 
     startFetchTransition(async () => {
@@ -29,10 +29,10 @@ export default function Home() {
 
       const keywordParam = keyword || search;
       const res = await fetchNews(pageParam, keywordParam as string);
-      if (res === "policies.ratelimit.QuotaViolation") {
+      if (res === 'policies.ratelimit.QuotaViolation') {
         toast({
-          title: "Something went wrong!",
-          description: "Either you ran out of limit or due to server error",
+          title: 'Something went wrong!',
+          description: 'Either you ran out of limit or due to server error',
           action: (
             <ToastAction altText="Try again" onClick={() => fetchData()}>
               Try again
@@ -55,7 +55,7 @@ export default function Home() {
     (keyword: string) => {
       setNews([]);
       setCurrentPage(-1);
-      const newQueryParam = generateQueryParam(searchParams, "search", keyword);
+      const newQueryParam = generateQueryParam(searchParams, 'search', keyword);
       router.replace(`${pathname}?${newQueryParam}`);
     },
     [searchParams]
@@ -69,7 +69,7 @@ export default function Home() {
     <>
       <header className="sticky top-0 pt-8 pb-4 bg-black text-white">
         <div className="container">
-          <h1 className="text-center text-lg font-bold">NYT Feed</h1>
+          <h1 className="text-center text-lg font-bold">NYT Feed App</h1>
           <SearchBar
             disabled={isFetching}
             onSubmit={handleSearch}
@@ -86,8 +86,8 @@ export default function Home() {
           className="flex gap-2 w-full mt-4 mb-12 border border-black rounded-[6px] bg-black text-white hover:bg-white hover:text-black"
           onClick={() => fetchData()}
         >
-          {isFetching ? <Spinner /> : ""}
-          {isFetching ? "Please wait" : "Load more"}
+          {isFetching ? <Spinner /> : ''}
+          {isFetching ? 'Please wait' : 'Load more'}
         </Button>
       </div>
     </>
